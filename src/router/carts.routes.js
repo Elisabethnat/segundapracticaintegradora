@@ -2,7 +2,7 @@ import { Router } from 'express';
 import cartModel from '../models/carts.models.js';
 
 const cartRouter = Router();
-//Get Carts (ok!)
+
 cartRouter.get('/', async (req, res) => {
     const {limit}    = req.query
     try{
@@ -14,7 +14,7 @@ cartRouter.get('/', async (req, res) => {
     }
 } );
 
-//Get cart by id (ok!)
+
 cartRouter.get('/:cid', async (req, res) => {
     const { cid } = req.params;
     try{
@@ -27,7 +27,6 @@ cartRouter.get('/:cid', async (req, res) => {
         res.status(400).send ({ error:`Error al consultar carritos: ${error}`});
     }
 });
-// Create Carts (ok!)
 cartRouter.post('/', async (req, res)=> {
     const respuesta = await cartModel.create(req.body);
     try{
@@ -38,26 +37,26 @@ cartRouter.post('/', async (req, res)=> {
     }
 });
 
-//add product to cart (agrega el producto ok y actualiza si existe)
+
 cartRouter.put('/:cid/products/:pid', async (req, res) => {
     const { cid, pid } = req.params;
     const { quantity } = req.body;
 
     try {
-        // Verificar si el carrito existe
+       
         const cart = await cartModel.findByIdAndUpdate(cid);
         !cart ?  res.status(404).send({ resultado: 'Cart not found' }) : ""
         
-        // Verificar si existe el producto
+      
         const prodIndex = cart.products.findIndex(prod => prod.id_prod.toString() === pid);
 
         prodIndex !== -1 ?
-            // Si el producto ya existe, actualiza la cantidad
+            
             cart.products[prodIndex].quantity += Number(quantity):
-            // Si el producto no existe, agrega uno nuevo al carrito
+            
             cart.products.push({ id_prod: pid, quantity });
 
-        // Guardar el carrito actualizado en la base de datos
+     
         await cart.save();
 
         res.status(200).send({ resultado: 'OK', message: cart });
@@ -66,7 +65,7 @@ cartRouter.put('/:cid/products/:pid', async (req, res) => {
     }
 });
 
-//update cart by id (ok!)
+
 cartRouter.put('/:cid', async (req, res) => {
 	const { cid } = req.params;
 	const { updateProducts } = req.body;
@@ -87,7 +86,7 @@ cartRouter.put('/:cid', async (req, res) => {
 	}
 });
 
-// delete pid from cart (ok!)
+
 cartRouter.delete('/:cid/products/:pid', async (req, res) => {
 	const { cid, pid } = req.params;
 
@@ -115,7 +114,7 @@ cartRouter.delete('/:cid/products/:pid', async (req, res) => {
 	}
 });
 
-//Delete all prodcuts from cart (ok!)
+
 cartRouter.delete('/:id', async (req, res) => {
     const { id } = req.params
     try {

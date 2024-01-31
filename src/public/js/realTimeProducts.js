@@ -6,11 +6,11 @@ socket.emit('load');
 
 form.addEventListener('submit', event => {ç
     event.preventDefault();
-    const dataForm = new FormData(event.target); // captura lo que se agrega en el form
-    const product = Object.fromEntries(dataForm);//dado un objeto iterable, devuelve datos en un objeto simple
-    //captura el producto y lo envia 
+    const dataForm = new FormData(event.target); 
+    const product = Object.fromEntries(dataForm);
+ 
     socket.emit('newProduct', product);
-    //Recibe msj del servidor
+    
     socket.on('mensajeProductoCreado', (mensaje)=>{
         Swal.fire(
            mensaje
